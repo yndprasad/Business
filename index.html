@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDP Mart | Billing System</title>
+
+<style>
+:root {
+    --bg: #f4f6f9;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #64748b;
+    --border: #e5e7eb;
+    --input: #ffffff;
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --sidebar: #111827;
+    --sidebar2: #1e293b;
+    --success: #16a34a;
+    --danger: #ef4444;
+    --shadow: 0 4px 20px rgba(0,0,0,.07);
+}
+
+body.dark {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --border: #334155;
+    --input: #0f172a;
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --sidebar: #020617;
+    --sidebar2: #0f172a;
+    --shadow: 0 4px 20px rgba(0,0,0,.25);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    transition: background .25s, color .25s;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+.app {
+    min-height: 100vh;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    width: 250px;
+    background: linear-gradient(180deg, var(--sidebar), var(--sidebar2));
+    color: white;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    padding: 24px 15px;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.brand {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.brand-logo {
+    width: 76px;
+    height: 76px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid white;
+    background: #475569;
+    margin-bottom: 10px;
+}
+
+.brand h2 {
+    font-size: 20px;
+    word-break: break-word;
+}
+
+.brand p {
+    color: #cbd5e1;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.menu-title {
+    color: #94a3b8;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 15px;
+}
+
+.menu-btn {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: #dbeafe;
+    padding: 13px 15px;
+    margin-bottom: 6px;
+    border-radius: 9px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.menu-btn:hover,
+.menu-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+.close-menu {
+    display: none;
+}
+
+/* ================= MAIN ================= */
+
+.main {
+    margin-left: 250px;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.topbar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topbar h1 {
+    font-size: 23px;
+}
+
+.mobile-menu {
+    display: none;
+    border: 0;
+    background: var(--primary);
+    color: white;
+    width: 42px;
+    height: 42px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.clock {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.theme-toggle {
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    border-radius: 15px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    font-size: 19px;
+    margin-bottom: 20px;
+}
+
+/* ================= FORM ================= */
+
+.form-group {
+    margin-bottom: 17px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+input {
+    width: 100%;
+    padding: 12px 13px;
+    border: 1px solid var(--border);
+    background: var(--input);
+    color: var(--text);
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+}
+
+.btn {
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 17px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-secondary {
+    background: #64748b;
+    color: white;
+}
+
+/* ================= ITEMS ================= */
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 15px;
+}
+
+.item-card {
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 12px;
+    padding: 17px;
+}
+
+.item-card h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.item-price {
+    color: var(--success);
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.item-actions {
+    display: flex;
+}
+
+.item-actions button {
+    width: 100%;
+    border: 0;
+    border-radius: 7px;
+    padding: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 30px;
+}
+
+/* ================= BILLING ================= */
+
+.search-box {
+    margin-bottom: 15px;
+}
+
+.search-box input {
+    padding: 15px;
+    font-size: 16px;
+}
+
+#searchResults {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.search-result {
+    background: rgba(37,99,235,.08);
+    border: 1px solid rgba(37,99,235,.25);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.search-result-price {
+    color: var(--success);
+    font-weight: 700;
+    margin: 8px 0 12px;
+}
+
+.bill-wrapper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 20px;
+    align-items: start;
+}
+
+.bill {
+    background: white;
+    color: #111827;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: var(--shadow);
+}
+
+.bill-header {
+    text-align: center;
+    border-bottom: 1px dashed #9ca3af;
+    padding-bottom: 17px;
+}
+
+.bill-header img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 8px;
+}
+
+.bill-header h2 {
+    font-size: 24px;
+}
+
+.bill-address {
+    margin-top: 5px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.bill-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 14px 0;
+    font-size: 13px;
+}
+
+.bill-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bill-table th,
+.bill-table td {
+    padding: 10px 5px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 13px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.bill-table th {
+    color: #64748b;
+}
+
+.bill-table th:last-child,
+.bill-table td:last-child {
+    text-align: right;
+}
+
+.qty-input,
+.price-input {
+    width: 70px;
+    padding: 6px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #111827;
+    border-radius: 6px;
+}
+
+.bill-total {
+    border-top: 2px solid #111827;
+    margin-top: 17px;
+    padding-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.thank-you {
+    text-align: center;
+    border-top: 1px dashed #9ca3af;
+    margin-top: 25px;
+    padding-top: 15px;
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.bill-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.bill-actions .btn {
+    flex: 1;
+}
+
+/* ================= PROFILE ================= */
+
+.profile-preview {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-preview img {
+    width: 125px;
+    height: 125px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--primary);
+    background: #e5e7eb;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+/* ================= OVERLAY ================= */
+
+.overlay {
+    display: none;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1000px) {
+
+    .sidebar {
+        width: 230px;
+    }
+
+    .main {
+        margin-left: 230px;
+    }
+
+    .bill-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 280px;
+        transform: translateX(-100%);
+        transition: transform .3s ease;
+        box-shadow: 5px 0 25px rgba(0,0,0,.25);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .close-menu {
+        display: block;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        border: 0;
+        background: #ef4444;
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        cursor: pointer;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 14px;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.5);
+        z-index: 900;
+    }
+
+    .overlay.show {
+        display: block;
+    }
+
+    .topbar {
+        padding: 13px 15px;
+    }
+
+    .topbar h1 {
+        font-size: 19px;
+    }
+
+    .clock {
+        font-size: 12px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+@media (max-width: 520px) {
+
+    .topbar {
+        align-items: center;
+    }
+
+    .topbar-left {
+        min-width: 0;
+    }
+
+    .topbar h1 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .topbar-right {
+        gap: 6px;
+    }
+
+    .clock {
+        display: none;
+    }
+
+    .theme-toggle {
+        width: 38px;
+        height: 38px;
+    }
+
+    .mobile-menu {
+        width: 38px;
+        height: 38px;
+    }
+
+    .items-grid,
+    #searchResults {
+        grid-template-columns: 1fr;
+    }
+
+    .bill {
+        padding: 17px 10px;
+        border-radius: 10px;
+    }
+
+    .bill-header h2 {
+        font-size: 20px;
+    }
+
+    .bill-table {
+        min-width: 520px;
+    }
+
+    .bill {
+        overflow-x: auto;
+    }
+
+    .bill-meta {
+        font-size: 12px;
+    }
+
+    .bill-total {
+        font-size: 17px;
+    }
+
+    .bill-actions {
+        flex-direction: column;
+    }
+}
+
+/* ================= PRINT ================= */
+
+@media print {
+
+    body {
+        background: white !important;
+    }
+
+    .sidebar,
+    .topbar,
+    .no-print {
+        display: none !important;
+    }
+
+    .main {
+        margin: 0 !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .section {
+        display: none !important;
+    }
+
+    #billingSection {
+        display: block !important;
+    }
+
+    .bill-wrapper {
+        display: block !important;
+    }
+
+    .bill {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        padding: 10px !important;
+    }
+
+    .remove-column {
+        display: none !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <button class="close-menu" onclick="closeMenu()">✕</button>
+
+        <div class="brand">
+
+            <img
+                id="sideLogo"
+                class="brand-logo"
+                src="https://via.placeholder.com/100?text=LOGO"
+                alt="Business Logo">
+
+            <h2 id="sideBusinessName">NDP Mart</h2>
+
+            <p id="sideTiming">
+                10:00 AM - 9:00 PM
+            </p>
+
+        </div>
+
+        <div class="menu-title">Menu</div>
+
+        <button
+            class="menu-btn active"
+            onclick="showSection('addItemsSection', this)">
+            ➕ &nbsp; Add Items
+        </button>
+
+        <button
+            class="menu-btn"
+            onclick="showSection('billingSection', this)">
+            🧾 &nbsp; Billing System
+        </button>
+
+        <button
+            class="menu-btn"
+            onclick="showSection('profileSection', this)">
+            ⚙️ &nbsp; Business Profile
+        </button>
+
+    </aside>
+
+
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <div class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="mobile-menu"
+                    onclick="openMenu()">
+                    ☰
+                </button>
+
+                <h1 id="pageTitle">
+                    Add Items
+                </h1>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <div
+                    class="clock"
+                    id="liveClock">
+                </div>
+
+                <button
+                    class="theme-toggle"
+                    id="themeToggle"
+                    onclick="toggleTheme()"
+                    title="Change Theme">
+                    🌙
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= ADD ITEMS ================= -->
+
+        <section
+            id="addItemsSection"
+            class="section active">
+
+            <div class="card">
+
+                <h2>➕ Add New Item</h2>
+
+                <form id="itemForm">
+
+                    <div class="form-group">
+
+                        <label>Item Name</label>
+
+                        <input
+                            type="text"
+                            id="itemName"
+                            placeholder="Example: Cotton Shirt"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Price</label>
+
+                        <input
+                            type="number"
+                            id="itemPrice"
+                            placeholder="Example: 799"
+                            min="0"
+                            step="0.01"
+                            required>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+                        Add Item
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <div class="card">
+
+                <h2>📦 Available Items</h2>
+
+                <div
+                    id="itemsList"
+                    class="items-grid">
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= BILLING ================= -->
+
+        <section
+            id="billingSection"
+            class="section">
+
+            <div class="card no-print">
+
+                <h2>🔎 Search Items</h2>
+
+                <div class="search-box">
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search item name..."
+                        autocomplete="off">
+
+                </div>
+
+                <div id="searchResults"></div>
+
+            </div>
+
+
+            <div class="bill-wrapper">
+
+                <!-- BILL -->
+
+                <div
+                    class="bill"
+                    id="printBill">
+
+                    <div class="bill-header">
+
+                        <img
+                            id="billLogo"
+                            src="https://via.placeholder.com/100?text=LOGO"
+                            alt="Business Logo">
+
+                        <h2 id="billBusinessName">
+                            NDP Mart
+                        </h2>
+
+                        <div
+                            class="bill-address"
+                            id="billAddress">
+                            Rajahmundry
+                        </div>
+
+                    </div>
+
+
+                    <div class="bill-meta">
+
+                        <div>
+                            <strong>Date:</strong>
+                            <span id="billDate"></span>
+                        </div>
+
+                        <div>
+                            <strong>Time:</strong>
+                            <span id="billTime"></span>
+                        </div>
+
+                    </div>
+
+
+                    <table class="bill-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Item</th>
+
+                                <th>Qty</th>
+
+                                <th>Price</th>
+
+                                <th>Total</th>
+
+                                <th class="remove-column">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="billItems"></tbody>
+
+                    </table>
+
+
+                    <div class="bill-total">
+
+                        <span>
+                            Grand Total
+                        </span>
+
+                        <span id="grandTotal">
+                            ₹0.00
+                        </span>
+
+                    </div>
+
+
+                    <div class="thank-you">
+                        Thank You, Visit Again! ❤️
+                    </div>
+
+                </div>
+
+
+                <!-- BILL ACTIONS -->
+
+                <div class="card no-print">
+
+                    <h2>🧾 Bill Actions</h2>
+
+                    <p style="color:var(--muted); margin-bottom:15px;">
+                        Change quantity and price before printing.
+                    </p>
+
+                    <div class="bill-actions">
+
+                        <button
+                            class="btn btn-success"
+                            onclick="printBill()">
+                            🖨️ Print Bill
+                        </button>
+
+                        <button
+                            class="btn btn-danger"
+                            onclick="clearBill()">
+                            🗑️ Clear Bill
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= BUSINESS PROFILE ================= -->
+
+        <section
+            id="profileSection"
+            class="section">
+
+            <div class="card">
+
+                <h2>🏪 Business Profile</h2>
+
+
+                <div class="profile-preview">
+
+                    <img
+                        id="profilePreview"
+                        src="https://via.placeholder.com/150?text=LOGO"
+                        alt="Business Logo">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Business Profile Picture / Logo
+                    </label>
+
+                    <input
+                        type="file"
+                        id="profileImage"
+                        accept="image/*">
+
+                </div>
+
+
+                <div class="profile-grid">
+
+                    <div class="form-group">
+
+                        <label>
+                            Business Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="businessName"
+                            placeholder="Enter business name">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Business Timing
+                        </label>
+
+                        <input
+                            type="text"
+                            id="businessTiming"
+                            placeholder="Example: 10:00 AM - 9:00 PM">
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Full Rajahmundry
+                    </label>
+
+                    <input
+                        type="text"
+                        id="businessAddress"
+                        placeholder="Enter complete address">
+
+                </div>
+
+
+                <button
+                    class="btn btn-primary"
+                    onclick="saveBusinessProfile()">
+                    💾 Save Business Profile
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+/* =====================================
+   DATA
+===================================== */
+
+let items =
+    JSON.parse(localStorage.getItem("ndpMartItems")) || [];
+
+let billItems =
+    JSON.parse(localStorage.getItem("ndpMartBill")) || [];
+
+let business =
+    JSON.parse(localStorage.getItem("ndpMartBusiness")) || {
+        name: "NDP Mart",
+        address: "Rajahmundry",
+        timing: "10:00 AM - 9:00 PM",
+        image: ""
+    };
+
+
+/* =====================================
+   THEME
+===================================== */
+
+function loadTheme() {
+
+    const savedTheme =
+        localStorage.getItem("ndpMartTheme");
+
+    if (savedTheme === "dark") {
+
+        document.body.classList.add("dark");
+
+        document.getElementById("themeToggle")
+            .textContent = "☀️";
+
+    } else {
+
+        document.body.classList.remove("dark");
+
+        document.getElementById("themeToggle")
+            .textContent = "🌙";
+    }
+}
+
+
+function toggleTheme() {
+
+    document.body.classList.toggle("dark");
+
+    const dark =
+        document.body.classList.contains("dark");
+
+    localStorage.setItem(
+        "ndpMartTheme",
+        dark ? "dark" : "light"
+    );
+
+    document.getElementById("themeToggle")
+        .textContent = dark ? "☀️" : "🌙";
+}
+
+
+/* =====================================
+   MOBILE MENU
+===================================== */
+
+function openMenu() {
+
+    document.getElementById("sidebar")
+        .classList.add("open");
+
+    document.getElementById("overlay")
+        .classList.add("show");
+}
+
+
+function closeMenu() {
+
+    document.getElementById("sidebar")
+        .classList.remove("open");
+
+    document.getElementById("overlay")
+        .classList.remove("show");
+}
+
+
+/* =====================================
+   NAVIGATION
+===================================== */
+
+function showSection(sectionId, button) {
+
+    document.querySelectorAll(".section")
+        .forEach(section =>
+            section.classList.remove("active")
+        );
+
+    document.getElementById(sectionId)
+        .classList.add("active");
+
+
+    document.querySelectorAll(".menu-btn")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+    button.classList.add("active");
+
+
+    const titles = {
+        addItemsSection: "Add Items",
+        billingSection: "Billing System",
+        profileSection: "Business Profile"
+    };
+
+
+    document.getElementById("pageTitle")
+        .textContent = titles[sectionId];
+
+
+    closeMenu();
+
+
+    if (sectionId === "billingSection") {
+
+        renderSearchResults(
+            document.getElementById("searchInput").value
+        );
+    }
+}
+
+
+/* =====================================
+   ADD ITEM
+===================================== */
+
+document.getElementById("itemForm")
+.addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const name =
+        document.getElementById("itemName")
+            .value.trim();
+
+    const price =
+        parseFloat(
+            document.getElementById("itemPrice").value
+        );
+
+
+    if (!name || isNaN(price) || price < 0) {
+
+        alert("Please enter valid item details.");
+
+        return;
+    }
+
+
+    items.push({
+        id: Date.now(),
+        name: name,
+        price: price
+    });
+
+
+    localStorage.setItem(
+        "ndpMartItems",
+        JSON.stringify(items)
+    );
+
+
+    this.reset();
+
+    renderItems();
+
+    alert("Item added successfully! ✅");
+});
+
+
+function renderItems() {
+
+    const container =
+        document.getElementById("itemsList");
+
+    container.innerHTML = "";
+
+
+    if (items.length === 0) {
+
+        container.innerHTML =
+            `<div class="empty">
+                No items added yet.
+             </div>`;
+
+        return;
+    }
+
+
+    items.forEach(item => {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "item-card";
+
+
+        card.innerHTML = `
+
+            <h3>${escapeHTML(item.name)}</h3>
+
+            <div class="item-price">
+                ₹${Number(item.price).toFixed(2)}
+            </div>
+
+            <div class="item-actions">
+
+                <button
+                    style="background:#fee2e2;color:#b91c1c;"
+                    onclick="deleteItem(${item.id})">
+                    Delete
+                </button>
+
+            </div>
+        `;
+
+
+        container.appendChild(card);
+    });
+}
+
+
+function deleteItem(id) {
+
+    if (!confirm("Delete this item?")) return;
+
+
+    items =
+        items.filter(item => item.id !== id);
+
+
+    localStorage.setItem(
+        "ndpMartItems",
+        JSON.stringify(items)
+    );
+
+
+    renderItems();
+
+    renderSearchResults(
+        document.getElementById("searchInput").value
+    );
+}
+
+
+/* =====================================
+   SEARCH
+===================================== */
+
+document.getElementById("searchInput")
+.addEventListener("input", function() {
+
+    renderSearchResults(this.value);
+
+});
+
+
+function renderSearchResults(searchTerm) {
+
+    const results =
+        document.getElementById("searchResults");
+
+    results.innerHTML = "";
+
+
+    const term =
+        searchTerm.trim().toLowerCase();
+
+
+    if (!term) return;
+
+
+    const filtered =
+        items.filter(item =>
+            item.name.toLowerCase()
+                .includes(term)
+        );
+
+
+    if (filtered.length === 0) {
+
+        results.innerHTML = `
+            <div class="search-result"
+                 style="color:#dc2626;">
+                ❌ Item Not Found
+            </div>
+        `;
+
+        return;
+    }
+
+
+    filtered.forEach(item => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "search-result";
+
+
+        div.innerHTML = `
+
+            <strong>
+                ${escapeHTML(item.name)}
+            </strong>
+
+            <div class="search-result-price">
+                ₹${Number(item.price).toFixed(2)}
+            </div>
+
+            <button
+                class="btn btn-primary"
+                onclick="addToBill(${item.id})">
+                Add to Bill
+            </button>
+
+        `;
+
+
+        results.appendChild(div);
+
+    });
+}
+
+
+/* =====================================
+   BILL
+===================================== */
+
+function addToBill(id) {
+
+    const item =
+        items.find(i => i.id === id);
+
+    if (!item) return;
+
+
+    const existing =
+        billItems.find(
+            billItem => billItem.itemId === id
+        );
+
+
+    if (existing) {
+
+        existing.quantity += 1;
+
+    } else {
+
+        billItems.push({
+
+            id: Date.now(),
+
+            itemId: item.id,
+
+            name: item.name,
+
+            quantity: 1,
+
+            price: Number(item.price)
+
+        });
+    }
+
+
+    saveBill();
+
+    renderBill();
+}
+
+
+function renderBill() {
+
+    const tbody =
+        document.getElementById("billItems");
+
+    tbody.innerHTML = "";
+
+
+    let grandTotal = 0;
+
+
+    billItems.forEach((item, index) => {
+
+        const total =
+            Number(item.quantity) *
+            Number(item.price);
+
+
+        grandTotal += total;
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                ${escapeHTML(item.name)}
+            </td>
+
+            <td>
+                <input
+                    class="qty-input"
+                    type="number"
+                    min="1"
+                    value="${item.quantity}"
+                    onchange="updateQuantity(${index}, this.value)">
+            </td>
+
+            <td>
+                <input
+                    class="price-input"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value="${item.price}"
+                    onchange="updatePrice(${index}, this.value)">
+            </td>
+
+            <td>
+                ₹${total.toFixed(2)}
+            </td>
+
+            <td class="remove-column">
+
+                <button
+                    class="btn btn-danger"
+                    style="padding:5px 9px;"
+                    onclick="removeBillItem(${index})">
+                    ×
+                </button>
+
+            </td>
+        `;
+
+
+        tbody.appendChild(row);
+    });
+
+
+    document.getElementById("grandTotal")
+        .textContent =
+        "₹" + grandTotal.toFixed(2);
+
+
+    saveBill();
+}
+
+
+function updateQuantity(index, value) {
+
+    let quantity =
+        parseInt(value);
+
+
+    if (
+        isNaN(quantity) ||
+        quantity < 1
+    ) {
+        quantity = 1;
+    }
+
+
+    billItems[index].quantity =
+        quantity;
+
+
+    renderBill();
+}
+
+
+function updatePrice(index, value) {
+
+    let price =
+        parseFloat(value);
+
+
+    if (
+        isNaN(price) ||
+        price < 0
+    ) {
+        price = 0;
+    }
+
+
+    billItems[index].price =
+        price;
+
+
+    renderBill();
+}
+
+
+function removeBillItem(index) {
+
+    billItems.splice(index, 1);
+
+    saveBill();
+
+    renderBill();
+}
+
+
+function clearBill() {
+
+    if (billItems.length === 0) return;
+
+
+    if (!confirm(
+        "Clear all items from this bill?"
+    )) return;
+
+
+    billItems = [];
+
+    saveBill();
+
+    renderBill();
+}
+
+
+function saveBill() {
+
+    localStorage.setItem(
+        "ndpMartBill",
+        JSON.stringify(billItems)
+    );
+}
+
+
+/* =====================================
+   BUSINESS PROFILE
+===================================== */
+
+function loadBusinessProfile() {
+
+    document.getElementById("businessName")
+        .value = business.name;
+
+    document.getElementById("businessAddress")
+        .value = business.address;
+
+    document.getElementById("businessTiming")
+        .value = business.timing;
+
+
+    document.getElementById("sideBusinessName")
+        .textContent = business.name;
+
+    document.getElementById("sideTiming")
+        .textContent = business.timing;
+
+    document.getElementById("billBusinessName")
+        .textContent = business.name;
+
+    document.getElementById("billAddress")
+        .textContent = business.address;
+
+
+    if (business.image) {
+
+        document.getElementById("profilePreview")
+            .src = business.image;
+
+        document.getElementById("sideLogo")
+            .src = business.image;
+
+        document.getElementById("billLogo")
+            .src = business.image;
+    }
+}
+
+
+function saveBusinessProfile() {
+
+    business.name =
+        document.getElementById("businessName")
+            .value.trim() ||
+        "NDP Mart";
+
+
+    business.address =
+        document.getElementById("businessAddress")
+            .value.trim() ||
+        "Rajahmundry";
+
+
+    business.timing =
+        document.getElementById("businessTiming")
+            .value.trim() ||
+        "10:00 AM - 9:00 PM";
+
+
+    localStorage.setItem(
+        "ndpMartBusiness",
+        JSON.stringify(business)
+    );
+
+
+    loadBusinessProfile();
+
+    alert(
+        "Business profile saved successfully! ✅"
+    );
+}
+
+
+/* =====================================
+   PROFILE IMAGE
+===================================== */
+
+document.getElementById("profileImage")
+.addEventListener("change", function() {
+
+    const file = this.files[0];
+
+    if (!file) return;
+
+
+    if (!file.type.startsWith("image/")) {
+
+        alert("Please select an image file.");
+
+        this.value = "";
+
+        return;
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload = function(e) {
+
+        business.image =
+            e.target.result;
+
+
+        document.getElementById("profilePreview")
+            .src = business.image;
+
+        document.getElementById("sideLogo")
+            .src = business.image;
+
+        document.getElementById("billLogo")
+            .src = business.image;
+
+
+        localStorage.setItem(
+            "ndpMartBusiness",
+            JSON.stringify(business)
+        );
+    };
+
+
+    reader.readAsDataURL(file);
+
+});
+
+
+/* =====================================
+   DATE & TIME
+===================================== */
+
+function updateDateTime() {
+
+    const now = new Date();
+
+
+    const date =
+        now.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        });
+
+
+    const time =
+        now.toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+        });
+
+
+    document.getElementById("liveClock")
+        .textContent = time;
+
+
+    document.getElementById("billDate")
+        .textContent = date;
+
+
+    document.getElementById("billTime")
+        .textContent = time;
+}
+
+
+/* =====================================
+   PRINT
+===================================== */
+
+function printBill() {
+
+    if (billItems.length === 0) {
+
+        alert(
+            "Please add at least one item to the bill."
+        );
+
+        return;
+    }
+
+
+    window.print();
+}
+
+
+/* =====================================
+   SECURITY
+===================================== */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* =====================================
+   START
+===================================== */
+
+loadTheme();
+
+renderItems();
+
+renderBill();
+
+loadBusinessProfile();
+
+updateDateTime();
+
+setInterval(updateDateTime, 1000);
+
+</script>
+
+</body>
+</html>
